@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Locale;
 
 public class Excursao {
     int codigo;
@@ -85,12 +86,14 @@ public class Excursao {
 
     //Gravar no arquivo “codigo.txt” o preço, max e as reservas
     public void salvar() {
+        // P/ garantir que o preço seja salvo com o separador "." e não a ","
+        Locale.setDefault(Locale.US);
         try {
             String caminho = String.format("./%d.txt", codigo);
             File file = new File(new File(caminho).getCanonicalPath());
             FileWriter arquivo = new FileWriter(file, false);
-            arquivo.write(String.format("%d%n", max));
-            arquivo.write(String.format("%.2f%nmax", preco));
+
+            arquivo.write(String.format("preco;%.2f%nmax;%d%n", preco, max));
             arquivo.write(System.lineSeparator());
             for (String reserva : lista_reservas) {
                 arquivo.write(reserva.replace("/", ";"));
@@ -101,32 +104,31 @@ public class Excursao {
             e.printStackTrace();
         }
     }
-   
+
 
     //Ler do arquivo “codigo.txt” o preço, max e as reservas
     public void carregar(){
-    	try {
-    		String linha;
-    	    String caminho = String.format("./%d.txt", this.codigo);
-    	    File file = new File(new File(caminho).getCanonicalPath());
-    	    Scanner arquivo = new Scanner(file);
-    	    this.max = Integer.parseInt(arquivo.nextLine());
-    	    this.preco = Double.parseDouble(arquivo.nextLine());
-    	    while (arquivo.hasNextLine()) {
-    			linha = arquivo.nextLine();
-    	        this.lista_reservas.add(linha);
-    	    }
-    	    arquivo.close();
-    	}
-	    catch (Exception e) {
-	    	//DEFINIR ONDE VAI SAIR A MENSAGEM DE ERRO!! (JOptionPane ou whatever)
-	    	System.out.println(e.getMessage());
-	    }
-	    
-
-            
-
+        try {
+            String caminho = String.format("./%d.txt", this.codigo);
+            File file = new File(new File(caminho).getCanonicalPath());
+            Scanner arquivo = new Scanner(file);
+            this.preco = Double.parseDouble(arquivo.nextLine().replace("preco;", ""));
+            this.max = Integer.parseInt(arquivo.nextLine().replace("max;",""));
+            // Devido a formatação do arquivo salvo
+            arquivo.nextLine();
+            String linha;
+            while (arquivo.hasNextLine()) {
+                linha = arquivo.nextLine();
+                this.lista_reservas.add(linha);
+            }
+            arquivo.close();
+        }
+        catch (Exception e) {
+            //DEFINIR ONDE VAI SAIR A MENSAGEM DE ERRO!! (JOptionPane ou whatever)
+            e.printStackTrace();
+        }
     }
+
 
 
     @Override
