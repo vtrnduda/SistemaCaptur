@@ -4,22 +4,29 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Excursao {
-	Integer codigo;
-	Double preco;
-	Integer max;
-	ArrayList<String> lista_reservas = new ArrayList<String>();
+    int codigo;
+    double preco;
+    int max;
+    ArrayList<String> lista_reservas;
 
-	public Excursao(Integer codigo, Double preco, Integer max) {
-		this.codigo = codigo;
-		this.preco = preco;
-		this.max = max;
-	}
-	
-	public Excursao(Integer codigo) {
-		this.codigo = codigo;
-	}
-	
-	//Adiciona uma reserva “cpf/nome” 
+    public Excursao(int codigo, double preco, int max) throws Exception {
+        this.codigo = codigo;
+        this.preco = preco;
+        this.max = max;
+        this.lista_reservas = new ArrayList<>();
+
+        if (this.codigo <= 0) throw new Exception("Código da excursão inválido.");
+        if (this.preco <= 0) throw new Exception("Preço inválido.");
+        if (this.max <= 0) throw new Exception("Numero máximo de reservas inválido.");
+    }
+
+    public Excursao(int codigo) throws Exception {
+        this.codigo = codigo;
+        this.lista_reservas = new ArrayList<>();
+        if (this.codigo <= 0) throw new Exception("Código da excursão inválido.");
+    }
+
+    //Adiciona uma reserva “cpf/nome”
     // Lembrar de lançar excecao
     public void criarReserva(String cpf, String nome) {
         if(lista_reservas.size() < max) {
