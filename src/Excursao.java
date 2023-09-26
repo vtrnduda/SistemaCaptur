@@ -51,7 +51,8 @@ public class Excursao {
     }
 
 
-    //Retorna as reservas dos cpfs que contém os dígitos (ou retorna todas as reservas caso dígitos seja vazio)
+    //Retorna as reservas que contém os dígitos do CPF ou nome passado como parâmetro (ou retorna todas as reservas caso dígitos seja vazio)
+//    TODO Verificar com o professor se podemos criar um unico método p/ realizar essa busca
     public ArrayList<String> listarReservasporCpf (String digitos) {
         if (digitos == null || digitos.isBlank()) {
             return lista_reservas;
@@ -78,7 +79,7 @@ public class Excursao {
     }
 
     //Calcular valor total da excursão = preço * qde de reservas
-    public Double calcularValorTotal(){
+    public double calcularValorTotal(){
         return preco * lista_reservas.size();
     }
 
