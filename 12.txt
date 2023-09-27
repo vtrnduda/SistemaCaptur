@@ -1,0 +1,6 @@
+preco;10.00
+max;10
+
+123456;João
+456789;Rafael
+5689;jonas
