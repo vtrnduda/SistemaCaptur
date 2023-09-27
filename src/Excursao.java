@@ -63,6 +63,7 @@ public class Excursao {
                 encontrouReserva = true;
             }
         }
+        
         if (!encontrouReserva)
             throw new Exception("Não existe este cpf na lista de reservas.");
     }
