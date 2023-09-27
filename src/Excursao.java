@@ -2,40 +2,48 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Locale;
 
 public class Excursao {
-	Integer codigo;
-	Double preco;
-	Integer max;
-	ArrayList<String> lista_reservas = new ArrayList<String>();
+    int codigo;
+    double preco;
+    int max;
+    ArrayList<String> lista_reservas;
 
-	public Excursao(Integer codigo, Double preco, Integer max) {
-		this.codigo = codigo;
-		this.preco = preco;
-		this.max = max;
-	}
-	
-	public Excursao(Integer codigo) {
-		this.codigo = codigo;
-	}
-	
-	//Adiciona uma reserva “cpf/nome” 
-    // Lembrar de lançar excecao
-    public void criarReserva(String cpf, String nome) {
-        if(lista_reservas.size() < max) {
-            String reserva = String.format("%s/%s", cpf, nome);
-            lista_reservas.add(reserva);
-        }
+    public Excursao(int codigo, double preco, int max) throws Exception {
+        this.codigo = codigo;
+        this.preco = preco;
+        this.max = max;
+        this.lista_reservas = new ArrayList<>();
+
+        if (this.codigo <= 0) throw new Exception("Código da excursão inválido.");
+        if (this.preco <= 0) throw new Exception("Preço inválido.");
+        if (this.max <= 0) throw new Exception("Numero máximo de reservas inválido.");
     }
 
-    //Remove uma reserva “cpf/nome”
-    public void cancelarReserva(String cpf, String nome) {
+    public Excursao(int codigo) throws Exception {
+        this.codigo = codigo;
+        this.lista_reservas = new ArrayList<>();
+        if (this.codigo <= 0) throw new Exception("Código da excursão inválido.");
+    }
+
+    public void criarReserva(String cpf, String nome) throws Exception{
+        if(lista_reservas.size() >= max) throw new Exception("O numero máximo de reservas foi atingido.");
+        for (String r: lista_reservas){
+            if (r.contains(nome)) throw new Exception("Este nome já foi cadastrado.");
+        }
         String reserva = String.format("%s/%s", cpf, nome);
-        if (lista_reservas.contains(reserva)) {
-            lista_reservas.remove(reserva);
-        }
+        lista_reservas.add(reserva);
     }
-    public void cancelarReserva(String cpf) {
+
+    public void cancelarReserva(String cpf, String nome) throws Exception {
+        String reserva = String.format("%s/%s", cpf, nome);
+        if(!lista_reservas.contains(reserva)) throw new Exception("Não existe este cpf/nome na lista de reservas.");
+
+        lista_reservas.remove(reserva);
+    }
+    public void cancelarReserva(String cpf) throws Exception {
+        if(!lista_reservas.contains(cpf)) throw new Exception("Não existe este cpf na lista de reservas.");
         for (String reserva : lista_reservas){
             if (lista_reservas.contains(cpf)) {
                 lista_reservas.remove(reserva);
@@ -43,7 +51,9 @@ public class Excursao {
         }
     }
 
-    //Retorna as reservas dos cpfs que contém os dígitos (ou retorna todas as reservas caso dígitos seja vazio)
+
+    //Retorna as reservas que contém os dígitos do CPF ou nome passado como parâmetro (ou retorna todas as reservas caso dígitos seja vazio)
+//    TODO Verificar com o professor se podemos criar um unico método p/ realizar essa busca
     public ArrayList<String> listarReservasporCpf (String digitos) {
         if (digitos == null || digitos.isBlank()) {
             return lista_reservas;
@@ -70,18 +80,20 @@ public class Excursao {
     }
 
     //Calcular valor total da excursão = preço * qde de reservas
-    public Double calcularValorTotal(){
+    public double calcularValorTotal(){
         return preco * lista_reservas.size();
     }
 
     //Gravar no arquivo “codigo.txt” o preço, max e as reservas
     public void salvar() {
+        // P/ garantir que o preço seja salvo com o separador "." e não a ","
+        Locale.setDefault(Locale.US);
         try {
             String caminho = String.format("./%d.txt", codigo);
             File file = new File(new File(caminho).getCanonicalPath());
             FileWriter arquivo = new FileWriter(file, false);
-            arquivo.write(String.format("%d%n", max));
-            arquivo.write(String.format("%.2f%nmax", preco));
+
+            arquivo.write(String.format("preco;%.2f%nmax;%d%n", preco, max));
             arquivo.write(System.lineSeparator());
             for (String reserva : lista_reservas) {
                 arquivo.write(reserva.replace("/", ";"));
@@ -92,32 +104,31 @@ public class Excursao {
             e.printStackTrace();
         }
     }
-   
+
 
     //Ler do arquivo “codigo.txt” o preço, max e as reservas
     public void carregar(){
-    	try {
-    		String linha;
-    	    String caminho = String.format("./%d.txt", this.codigo);
-    	    File file = new File(new File(caminho).getCanonicalPath());
-    	    Scanner arquivo = new Scanner(file);
-    	    this.max = Integer.parseInt(arquivo.nextLine());
-    	    this.preco = Double.parseDouble(arquivo.nextLine());
-    	    while (arquivo.hasNextLine()) {
-    			linha = arquivo.nextLine();
-    	        this.lista_reservas.add(linha);
-    	    }
-    	    arquivo.close();
-    	}
-	    catch (Exception e) {
-	    	//DEFINIR ONDE VAI SAIR A MENSAGEM DE ERRO!! (JOptionPane ou whatever)
-	    	System.out.println(e.getMessage());
-	    }
-	    
-
-            
-
+        try {
+            String caminho = String.format("./%d.txt", this.codigo);
+            File file = new File(new File(caminho).getCanonicalPath());
+            Scanner arquivo = new Scanner(file);
+            this.preco = Double.parseDouble(arquivo.nextLine().replace("preco;", ""));
+            this.max = Integer.parseInt(arquivo.nextLine().replace("max;",""));
+            // Devido a formatação do arquivo salvo
+            arquivo.nextLine();
+            String linha;
+            while (arquivo.hasNextLine()) {
+                linha = arquivo.nextLine();
+                this.lista_reservas.add(linha);
+            }
+            arquivo.close();
+        }
+        catch (Exception e) {
+            //DEFINIR ONDE VAI SAIR A MENSAGEM DE ERRO!! (JOptionPane ou whatever)
+            e.printStackTrace();
+        }
     }
+
 
 
     @Override
