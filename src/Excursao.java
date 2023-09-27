@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Locale;
 
@@ -30,27 +31,41 @@ public class Excursao {
     public void criarReserva(String cpf, String nome) throws Exception{
         if(lista_reservas.size() >= max) throw new Exception("O numero máximo de reservas foi atingido.");
         for (String r: lista_reservas){
-            if (r.contains(nome)) throw new Exception("Este nome já foi cadastrado.");
+            if (r.equals(nome)) throw new Exception("Este nome já foi cadastrado.");
         }
         String reserva = String.format("%s/%s", cpf, nome);
         lista_reservas.add(reserva);
     }
 
+//    OK
     public void cancelarReserva(String cpf, String nome) throws Exception {
         String reserva = String.format("%s/%s", cpf, nome);
-        if(!lista_reservas.contains(reserva)) throw new Exception("Não existe este cpf/nome na lista de reservas.");
 
-        lista_reservas.remove(reserva);
+        for (String r : lista_reservas) {
+        	if(r.equals(reserva)) {
+        		lista_reservas.remove(reserva);
+        		return;
+        	}
+        }
+        throw new Exception("Não existe reserva na lista com esse cpf/nome");
     }
+        
+//    CHECKKKKK
     public void cancelarReserva(String cpf) throws Exception {
-        if(!lista_reservas.contains(cpf)) throw new Exception("Não existe este cpf na lista de reservas.");
-        for (String reserva : lista_reservas){
-            if (lista_reservas.contains(cpf)) {
-                lista_reservas.remove(reserva);
+        boolean encontrouReserva = false;
+        Iterator<String> iterator = lista_reservas.iterator();
+
+        while (iterator.hasNext()) {
+            String reserva = iterator.next();
+            String digitos = reserva.split("/")[0];
+            if (digitos.equals(cpf)) {
+                iterator.remove(); // Remove o elemento de forma segura
+                encontrouReserva = true;
             }
         }
+        if (!encontrouReserva)
+            throw new Exception("Não existe este cpf na lista de reservas.");
     }
-
 
     //Retorna as reservas que contém os dígitos do CPF ou nome passado como parâmetro (ou retorna todas as reservas caso dígitos seja vazio)
 //    TODO Verificar com o professor se podemos criar um unico método p/ realizar essa busca
@@ -118,14 +133,14 @@ public class Excursao {
             arquivo.nextLine();
             String linha;
             while (arquivo.hasNextLine()) {
-                linha = arquivo.nextLine();
+                linha = arquivo.nextLine().replace(";", "/");
                 this.lista_reservas.add(linha);
             }
             arquivo.close();
         }
         catch (Exception e) {
             //DEFINIR ONDE VAI SAIR A MENSAGEM DE ERRO!! (JOptionPane ou whatever)
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
