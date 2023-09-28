@@ -12,7 +12,7 @@ import javax.swing.JTextArea;
 
 public class App {
 
-	private JFrame frame;
+	private JFrame frmSistemaCaptur;
 
 	private Excursao excursao;
 
@@ -24,7 +24,7 @@ public class App {
 			public void run() {
 				try {
 					App window = new App();
-					window.frame.setVisible(true);
+					window.frmSistemaCaptur.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -43,71 +43,72 @@ public class App {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 484, 301);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frmSistemaCaptur = new JFrame();
+		frmSistemaCaptur.setTitle("Sistema Captur");
+		frmSistemaCaptur.setBounds(100, 100, 484, 301);
+		frmSistemaCaptur.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmSistemaCaptur.getContentPane().setLayout(null);
 
 		JButton criarExcursaoBtn = new JButton("Criar uma Excursão");
 		criarExcursaoBtn.setBounds(10, 11, 156, 23);
-		frame.getContentPane().add(criarExcursaoBtn);
+		frmSistemaCaptur.getContentPane().add(criarExcursaoBtn);
 
 		JButton recuperarExcursaoBtn = new JButton("Recuperar uma excursão existente");
 		recuperarExcursaoBtn.setBounds(176, 11, 258, 23);
-		frame.getContentPane().add(recuperarExcursaoBtn);
+		frmSistemaCaptur.getContentPane().add(recuperarExcursaoBtn);
 
 		JTextArea textArea = new JTextArea();
 		textArea.setEditable(false);
 		textArea.setBounds(10, 45, 209, 188);
-		frame.getContentPane().add(textArea);
+		frmSistemaCaptur.getContentPane().add(textArea);
 
 		JLabel codTitleLabel = new JLabel("Cód. da excursão: ");
 		codTitleLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		codTitleLabel.setBounds(250, 55, 111, 23);
-		frame.getContentPane().add(codTitleLabel);
+		frmSistemaCaptur.getContentPane().add(codTitleLabel);
 
 		JLabel codigoLabel = new JLabel("null");
 		codigoLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
 		codigoLabel.setBounds(371, 59, 46, 14);
-		frame.getContentPane().add(codigoLabel);
+		frmSistemaCaptur.getContentPane().add(codigoLabel);
 
 		JButton criarReservaBtn = new JButton("Criar Reserva");
 		criarReservaBtn.setEnabled(false);
 		criarReservaBtn.setBounds(229, 90, 199, 23);
-		frame.getContentPane().add(criarReservaBtn);
+		frmSistemaCaptur.getContentPane().add(criarReservaBtn);
 
 		JButton cancelarIndividualBtn = new JButton("Cancelar Reserva Individual");
 		cancelarIndividualBtn.setEnabled(false);
 		cancelarIndividualBtn.setBounds(229, 120, 199, 23);
-		frame.getContentPane().add(cancelarIndividualBtn);
+		frmSistemaCaptur.getContentPane().add(cancelarIndividualBtn);
 
 		JButton cancelarGrupoBtn = new JButton("Cancelar Reserva em Grupo");
 		cancelarGrupoBtn.setEnabled(false);
 
 		cancelarGrupoBtn.setBounds(229, 150, 199, 23);
-		frame.getContentPane().add(cancelarGrupoBtn);
+		frmSistemaCaptur.getContentPane().add(cancelarGrupoBtn);
 
 		JButton listarCpfBtn = new JButton("Listar Reservas por CPF");
 		listarCpfBtn.setEnabled(false);
 
 		listarCpfBtn.setBounds(229, 180, 199, 23);
-		frame.getContentPane().add(listarCpfBtn);
+		frmSistemaCaptur.getContentPane().add(listarCpfBtn);
 
 		JLabel valorTotalLabel = new JLabel("0,00");
 		valorTotalLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
 		valorTotalLabel.setBounds(137, 236, 46, 14);
-		frame.getContentPane().add(valorTotalLabel);
+		frmSistemaCaptur.getContentPane().add(valorTotalLabel);
 
 		JLabel totalLabel = new JLabel("Total: ");
 		totalLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		totalLabel.setBounds(49, 236, 46, 14);
-		frame.getContentPane().add(totalLabel);
+		frmSistemaCaptur.getContentPane().add(totalLabel);
 
 		JButton listarNomeBtn = new JButton("Listar Reservas por Nome");
 		listarNomeBtn.setEnabled(false);
 
 		listarNomeBtn.setBounds(229, 210, 199, 23);
-		frame.getContentPane().add(listarNomeBtn);
+		frmSistemaCaptur.getContentPane().add(listarNomeBtn);
 
 		// LISTENERS
 
@@ -123,23 +124,22 @@ public class App {
 					codigoLabel.setText(String.valueOf(codigo));
 
 //					Libera o menu de opções
-					criarReservaBtn.setEnabled(true);
-					cancelarIndividualBtn.setEnabled(true);
-					cancelarGrupoBtn.setEnabled(true);
-					listarCpfBtn.setEnabled(true);
-					listarNomeBtn.setEnabled(true);
+					Utils.habilitarBotoes(criarReservaBtn, cancelarIndividualBtn, cancelarGrupoBtn, listarCpfBtn,
+							listarNomeBtn);
 
 //					Adiciona as excursões a textArea
-					ArrayList<String> listaDeReservas = excursao.listarReservasporCpf("");
-					String reservas = "";
-					for (String reserva : listaDeReservas) {
-						reservas += reserva.replace(";", "\t") + "\n";
-					}
-					textArea.setText(reservas);
+					Utils.atualizarReservasTextArea(excursao, textArea);
+					// ArrayList<String> listaDeReservas = excursao.listarReservasporCpf("");
+					// String reservas = "";
+					// for (String reserva : listaDeReservas) {
+					// reservas += reserva.replace(";", "\t") + "\n";
+					// }
+					// textArea.setText(reservas);
 
 //					Valor total
-					double total = excursao.calcularValorTotal();
-					valorTotalLabel.setText(String.format("%.2f", total).replace(".", ","));
+					Utils.atualizarValorTotal(excursao, valorTotalLabel);
+					// double total = excursao.calcularValorTotal();
+					// valorTotalLabel.setText(String.format("%.2f", total).replace(".", ","));
 
 //					EXCURSAO CRIADA
 //					JOptionPane.showMessageDialog(null, excursao, "Informações", JOptionPane.INFORMATION_MESSAGE);
@@ -162,13 +162,13 @@ public class App {
 					codigoLabel.setText(String.valueOf(codigo));
 
 //					Libera o menu de opções
-					criarReservaBtn.setEnabled(true);
-					cancelarIndividualBtn.setEnabled(true);
-					cancelarGrupoBtn.setEnabled(true);
-					listarCpfBtn.setEnabled(true);
-					listarNomeBtn.setEnabled(true);
+					Utils.habilitarBotoes(criarReservaBtn, cancelarIndividualBtn, cancelarGrupoBtn, listarCpfBtn,
+							listarNomeBtn);
 
 //					Adiciona as reservas no textArea
+
+					// Utils.atualizarReservasTextArea(excursao, textArea);
+
 					ArrayList<String> listaDeReservas = excursao.listarReservasporCpf("");
 					String reservas = "";
 					for (String reserva : listaDeReservas) {
@@ -177,8 +177,7 @@ public class App {
 					textArea.setText(reservas);
 
 //					Atualiza o valorTotal
-					double total = excursao.calcularValorTotal();
-					valorTotalLabel.setText(String.format("%.2f", total).replace(".", ","));
+					Utils.atualizarValorTotal(excursao, valorTotalLabel);
 
 //					EXCURSAO CRIADA
 //					JOptionPane.showMessageDialog(null, excursao, "Informações", JOptionPane.INFORMATION_MESSAGE);
@@ -203,8 +202,7 @@ public class App {
 					textArea.append(novaReserva);
 
 //					Atualiza o valorTotal
-					double total = excursao.calcularValorTotal();
-					valorTotalLabel.setText(String.format("%.2f", total).replace(".", ","));
+					Utils.atualizarValorTotal(excursao, valorTotalLabel);
 
 				} catch (Exception er) {
 					System.out.println(er.getMessage());
@@ -225,8 +223,7 @@ public class App {
 					textArea.setText(textArea.getText().replace(reserva, ""));
 
 //				Valor total
-					double total = excursao.calcularValorTotal();
-					valorTotalLabel.setText(String.format("%.2f", total).replace(".", ","));
+					Utils.atualizarValorTotal(excursao, valorTotalLabel);
 
 				} catch (Exception er) {
 					System.out.println(er.getMessage());
@@ -250,8 +247,7 @@ public class App {
 					textArea.setText(reservas);
 
 //					Valor total
-					double total = excursao.calcularValorTotal();
-					valorTotalLabel.setText(String.format("%.2f", total).replace(".", ","));
+					Utils.atualizarValorTotal(excursao, valorTotalLabel);
 
 				} catch (Exception er) {
 
@@ -271,8 +267,8 @@ public class App {
 				}
 				textArea.setText(reservas);
 
-				double total = reservasFiltradas.size() * excursao.preco;
-				valorTotalLabel.setText(String.format("%.2f", total).replace(".", ","));
+//				Valor total
+				Utils.atualizarValorTotal(excursao, valorTotalLabel);
 			}
 		});
 
@@ -286,9 +282,9 @@ public class App {
 					reservas += reserva.replace("/", "\t") + "\n";
 				}
 				textArea.setText(reservas);
-
-				double total = reservasFiltradas.size() * excursao.preco;
-				valorTotalLabel.setText(String.format("%.2f", total).replace(".", ","));
+				
+//				Valor total
+				Utils.atualizarValorTotal(excursao, valorTotalLabel);
 			}
 		});
 
