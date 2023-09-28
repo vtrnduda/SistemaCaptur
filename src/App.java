@@ -67,7 +67,7 @@ public class App {
 		codTitleLabel.setBounds(250, 55, 111, 23);
 		frmSistemaCaptur.getContentPane().add(codTitleLabel);
 
-		JLabel codigoLabel = new JLabel("null");
+		JLabel codigoLabel = new JLabel("");
 		codigoLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
 		codigoLabel.setBounds(371, 59, 46, 14);
 		frmSistemaCaptur.getContentPane().add(codigoLabel);
