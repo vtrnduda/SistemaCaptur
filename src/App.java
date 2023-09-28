@@ -169,12 +169,7 @@ public class App {
 
 					// Utils.atualizarReservasTextArea(excursao, textArea);
 
-					ArrayList<String> listaDeReservas = excursao.listarReservasporCpf("");
-					String reservas = "";
-					for (String reserva : listaDeReservas) {
-						reservas += reserva.replace("/", "\t") + "\n";
-					}
-					textArea.setText(reservas);
+					Utils.atualizarReservasTextArea(excursao, textArea);
 
 //					Atualiza o valorTotal
 					Utils.atualizarValorTotal(excursao, valorTotalLabel);
@@ -206,6 +201,7 @@ public class App {
 
 				} catch (Exception er) {
 					System.out.println(er.getMessage());
+		            JOptionPane.showMessageDialog(null, er.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -238,6 +234,7 @@ public class App {
 				try {
 					String cpf = JOptionPane.showInputDialog("Digite o CPF: ");
 					excursao.cancelarReserva(cpf);
+					excursao.salvar();
 
 					ArrayList<String> listaDeReservas = excursao.listarReservasporCpf("");
 					String reservas = "";
@@ -268,15 +265,19 @@ public class App {
 				textArea.setText(reservas);
 
 //				Valor total
-				Utils.atualizarValorTotal(excursao, valorTotalLabel);
+				double total = excursao.preco * reservasFiltradas.size();
+				valorTotalLabel.setText(String.format("%.2f", total).replace(".", ","));
+				
 			}
 		});
 
 		listarNomeBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String nome = JOptionPane.showInputDialog("Digite o nome: ");
+				
 
 				ArrayList<String> reservasFiltradas = excursao.listarReservasPorNome(nome);
+				
 				String reservas = "";
 				for (String reserva : reservasFiltradas) {
 					reservas += reserva.replace("/", "\t") + "\n";
@@ -284,7 +285,9 @@ public class App {
 				textArea.setText(reservas);
 				
 //				Valor total
-				Utils.atualizarValorTotal(excursao, valorTotalLabel);
+				double total = excursao.preco * reservasFiltradas.size();
+				valorTotalLabel.setText(String.format("%.2f", total).replace(".", ","));
+				//Utils.atualizarValorTotal(excursao, valorTotalLabel);
 			}
 		});
 

@@ -1,7 +1,7 @@
-import java.awt.Container;
+
 import java.util.ArrayList;
+
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
@@ -15,13 +15,7 @@ public class Utils {
 				reservas += reserva.replace("/", "\t") + "\n";
 			}
 			textArea.setText(reservas);
-			
-			Container parent = textArea.getParent();
-			if (parent instanceof JComponent) {
-				JComponent jParent = (JComponent) parent;
-				jParent.revalidate(); // Revalida o layout da GUI
-				jParent.repaint(); // Redesenha a GUI
-			} // Redesenha a GUI
+
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -41,6 +35,7 @@ public class Utils {
 	
 	public static void atualizarValorTotal(Excursao excursao, JLabel valorTotalLabel) {
         double total = excursao.calcularValorTotal();
+        //valorTotalLabel.setText(String.valueOf(excursao.lista_reservas.size()));
         valorTotalLabel.setText(String.format("%.2f", total).replace(".", ","));
     }
 }
