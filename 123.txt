@@ -1,8 +1,0 @@
-preco;25.00
-max;10
-
-7458;madu
-0889;rafael
-null;4546
-35235;null
-null;null

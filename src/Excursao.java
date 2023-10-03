@@ -32,31 +32,27 @@ public class Excursao {
 			throw new Exception("Código da excursão inválido.");
 	}
 
+	// Adiciona uma reserva “cpf/nome”
 	public void criarReserva(String cpf, String nome) throws Exception {
-		try {
-	        if (lista_reservas.size() >= max) {
-	            throw new Exception("O numero máximo de reservas foi atingido.");
-	        }
-	        
-	        if (cpf == null || cpf.isEmpty()) {
-	            throw new Exception("É preciso adicionar um CPF válido!");
-	        }
+		if (lista_reservas.size() >= max) {
+			throw new Exception("O número máximo de reservas foi atingido.");
+		}
 
-	        for (String r : lista_reservas) {
-	            if (r.equals(nome)) {
-	                throw new Exception("Este nome já foi cadastrado.");
-	            }
-	        }
+		if (cpf == null || cpf.isEmpty() || nome == null || nome.isEmpty()) {
+			throw new Exception("Não é possível criar uma reserva com campos nulos!");
+		}
 
-	        String reserva = String.format("%s/%s", cpf, nome);
-	        lista_reservas.add(reserva);
-	    } catch (Exception er) {
-	        // Tratar a exceção aqui, por exemplo, exibindo uma mensagem
-	        System.out.println(er.getMessage());
-	    }
+		for (String r : lista_reservas) {
+			if (r.equals(nome)) {
+				throw new Exception("Este nome já foi cadastrado.");
+			}
+		}
+
+		String reserva = String.format("%s/%s", cpf, nome);
+		lista_reservas.add(reserva);
 	}
 
-//    OK
+	// Remove uma reserva “cpf/nome”
 	public void cancelarReserva(String cpf, String nome) throws Exception {
 		String reserva = String.format("%s/%s", cpf, nome);
 
@@ -69,7 +65,7 @@ public class Excursao {
 		throw new Exception("Não existe reserva na lista com esse cpf/nome");
 	}
 
-//    CHECKKKKK
+	// Remove todas as reservas do cpf
 	public void cancelarReserva(String cpf) throws Exception {
 		boolean encontrouReserva = false;
 		Iterator<String> iterator = lista_reservas.iterator();
@@ -82,15 +78,14 @@ public class Excursao {
 				encontrouReserva = true;
 			}
 		}
-		
+
 		if (!encontrouReserva)
 			throw new Exception("Não existe este cpf na lista de reserva.");
 
 	}
 
-	// Retorna as reservas que contém os dígitos do CPF ou nome passado como
-	// parâmetro (ou retorna todas as reservas caso dígitos seja vazio)
-//    TODO Verificar com o professor se podemos criar um unico método p/ realizar essa busca
+	// Retorna as reservas dos cpfs que contém os dígitos (ou retorna todas as
+	// reservas caso dígitos seja vazio)
 	public ArrayList<String> listarReservasporCpf(String digitos) {
 		if (digitos == null || digitos.isBlank()) {
 			return lista_reservas;
@@ -104,6 +99,8 @@ public class Excursao {
 		return reservas_filtradas;
 	}
 
+	// Retorna as reservas dos nomes que contém o texto (ou retorna todas as
+	// reservas caso texto seja vazio)
 	public ArrayList<String> listarReservasPorNome(String nome) {
 		if (nome == null || nome.isBlank()) {
 			return lista_reservas;
@@ -165,6 +162,7 @@ public class Excursao {
 		}
 	}
 
+	// Retorna codigo, preço, max e total de reservas
 	@Override
 	public String toString() {
 		return "Excursao [codigo=" + codigo + ", preco=" + preco + ", max=" + max + ", lista_reservas=" + lista_reservas

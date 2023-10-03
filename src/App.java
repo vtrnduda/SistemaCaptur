@@ -120,6 +120,7 @@ public class App {
 					int max = Integer.parseInt(JOptionPane.showInputDialog("Digite o número máximo de reservas: "));
 
 					excursao = new Excursao(codigo, preco, max);
+
 //					Atualiza o visualizador do codigo
 					codigoLabel.setText(String.valueOf(codigo));
 
@@ -129,23 +130,12 @@ public class App {
 
 //					Adiciona as excursões a textArea
 					Utils.atualizarReservasTextArea(excursao, textArea);
-					// ArrayList<String> listaDeReservas = excursao.listarReservasporCpf("");
-					// String reservas = "";
-					// for (String reserva : listaDeReservas) {
-					// reservas += reserva.replace(";", "\t") + "\n";
-					// }
-					// textArea.setText(reservas);
 
-//					Valor total
+//					Atualiza o valorTotal
 					Utils.atualizarValorTotal(excursao, valorTotalLabel);
-					// double total = excursao.calcularValorTotal();
-					// valorTotalLabel.setText(String.format("%.2f", total).replace(".", ","));
-
-//					EXCURSAO CRIADA
-//					JOptionPane.showMessageDialog(null, excursao, "Informações", JOptionPane.INFORMATION_MESSAGE);
 
 				} catch (Exception er) {
-					JOptionPane.showMessageDialog(null, er.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, er.getMessage(), "Erro", JOptionPane.WARNING_MESSAGE);
 				}
 
 			}
@@ -166,16 +156,11 @@ public class App {
 							listarNomeBtn);
 
 //					Adiciona as reservas no textArea
-
-					// Utils.atualizarReservasTextArea(excursao, textArea);
-
 					Utils.atualizarReservasTextArea(excursao, textArea);
 
 //					Atualiza o valorTotal
 					Utils.atualizarValorTotal(excursao, valorTotalLabel);
 
-//					EXCURSAO CRIADA
-//					JOptionPane.showMessageDialog(null, excursao, "Informações", JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception er) {
 					String mensagem = "Não foi possível realizar a operação por causa do input:\n" + er.getMessage();
 					JOptionPane.showMessageDialog(null, mensagem, "Erro", JOptionPane.ERROR_MESSAGE);
@@ -200,8 +185,7 @@ public class App {
 					Utils.atualizarValorTotal(excursao, valorTotalLabel);
 
 				} catch (Exception er) {
-					System.out.println(er.getMessage());
-		            JOptionPane.showMessageDialog(null, er.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, er.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -247,7 +231,7 @@ public class App {
 					Utils.atualizarValorTotal(excursao, valorTotalLabel);
 
 				} catch (Exception er) {
-
+					JOptionPane.showMessageDialog(null, "Erro: " + er.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 				}
 
 			}
@@ -267,27 +251,26 @@ public class App {
 //				Valor total
 				double total = excursao.preco * reservasFiltradas.size();
 				valorTotalLabel.setText(String.format("%.2f", total).replace(".", ","));
-				
+
 			}
 		});
 
 		listarNomeBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String nome = JOptionPane.showInputDialog("Digite o nome: ");
-				
 
 				ArrayList<String> reservasFiltradas = excursao.listarReservasPorNome(nome);
-				
+
 				String reservas = "";
 				for (String reserva : reservasFiltradas) {
 					reservas += reserva.replace("/", "\t") + "\n";
 				}
 				textArea.setText(reservas);
-				
+
 //				Valor total
 				double total = excursao.preco * reservasFiltradas.size();
 				valorTotalLabel.setText(String.format("%.2f", total).replace(".", ","));
-				//Utils.atualizarValorTotal(excursao, valorTotalLabel);
+				// Utils.atualizarValorTotal(excursao, valorTotalLabel);
 			}
 		});
 
