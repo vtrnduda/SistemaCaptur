@@ -43,7 +43,7 @@ public class Excursao {
 		}
 
 		for (String r : lista_reservas) {
-			if (r.equals(nome)) {
+			if (r.split("/")[1].equals(nome)) {
 				throw new Exception("Este nome já foi cadastrado.");
 			}
 		}
